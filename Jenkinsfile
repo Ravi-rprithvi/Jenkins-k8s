@@ -25,12 +25,19 @@ pipeline {
         stage('Build & Push Docker Image') {
             steps {
                 script {
-                    def awsLogin = sh(script: "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO", returnStdout: true)
                     sh """
+                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
                         docker build -t $ECR_REPO:$IMAGE_TAG .
                         docker push $ECR_REPO:$IMAGE_TAG
                     """
                 }
+            }
+        }
+
+        stage('Manual Approval for Production') {
+            when { expression { params.DEPLOY_ENV == 'prod' } }
+            steps {
+                input message: "Deploy to Production?", ok: "Proceed"
             }
         }
 
