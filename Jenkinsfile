@@ -47,8 +47,11 @@ pipeline {
                     sh "aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER"
 
                     def kubeManifest = "k8s/deployment-${params.DEPLOY_ENV}.yaml"
+                    def kubeService = "k8s/service-${params.DEPLOY_ENV}.yaml"
+                    
                     sh """
                         kubectl apply -f ${kubeManifest} --namespace=${NAMESPACE}
+                        kubectl apply -f ${kubeService} --namespace=${NAMESPACE}
                     """
                 }
             }
