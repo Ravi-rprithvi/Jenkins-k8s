@@ -56,6 +56,28 @@ pipeline {
                 }
             }
         }
+       #stage('Deploy To Kubernetes') {
+        #    steps {
+         #       withKubeCredentials(kubectlCredentials: [[
+          #          caCertificate: '',
+           #         clusterName: 'EKS-1',
+            #        contextName: '',
+             #       credentialsId: 'k8s-token',
+              #      namespace: 'webapps',
+               #     serverUrl: 'https://2F72ADEF9EC8A3F1346707001DD19C5A.gr7.ap-south-1.eks.amazonaws.com'
+                #]]) {
+                 #   script {
+                  #      def kubeDeployment = "k8s/deployment-${params.DEPLOY_ENV}.yaml"
+                   #     def kubeService = "k8s/service-${params.DEPLOY_ENV}.yaml"
+
+                    #    sh """
+                     #       kubectl apply -f ${kubeDeployment} --namespace=${NAMESPACE}
+                      #      kubectl apply -f ${kubeService} --namespace=${NAMESPACE}
+                       # """
+                    #}
+                #}
+            #}
+        #}
 
         stage('Update Ingress') {
             steps {
